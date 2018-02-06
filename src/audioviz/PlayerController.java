@@ -76,6 +76,8 @@ public class PlayerController implements Initializable {
     @FXML
     private Slider timeSlider;
     
+    private boolean isTimeSliderChanging = false;
+    
     private Media media;
     private MediaPlayer mediaPlayer;
     
@@ -115,16 +117,23 @@ public class PlayerController implements Initializable {
         }
         
         
-        EventHandler<? super MouseEvent> mouseRelease = (MouseEvent event) -> {
-            Double value = ((Slider)event.getSource()).getValue();
-            System.out.println("Mouse Released, Value : " + value);
-            //GET VALUE HERE
+        EventHandler<? super MouseEvent> mousePressed = (MouseEvent event) -> {
+            this.isTimeSliderChanging = true;
+            System.out.println("Mouse pressed");
         };
         
+        EventHandler<? super MouseEvent> mouseRelease = (MouseEvent event) -> {
+            this.isTimeSliderChanging = false;
+            Double value = ((Slider)event.getSource()).getValue();
+            System.out.println("Mouse Released, Value : " + value);
+            
+            Duration newTime = new Duration(timeSlider.getValue());              
+            mediaPlayer.seek(newTime);
+        };
 
+        timeSlider.setOnMousePressed(mousePressed);
         timeSlider.setOnMouseReleased(mouseRelease);
-                
-                
+                         
     }
     
     private void selectVisualizer(ActionEvent event) {
@@ -185,7 +194,7 @@ public class PlayerController implements Initializable {
     
     private void handleReady() {
         Duration duration = mediaPlayer.getTotalDuration();
-        lengthText.setText(duration.toString());
+        lengthText.setText(String.format("%.1f", duration.toMillis()));
         Duration ct = mediaPlayer.getCurrentTime();
         currentText.setText(ct.toString());
         currentVisualizer.start(numBands, vizPane);
@@ -203,9 +212,15 @@ public class PlayerController implements Initializable {
     
     private void handleUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
         Duration ct = mediaPlayer.getCurrentTime();
-        double ms = ct.toMillis();
-        currentText.setText(Double.toString(ms));
-        timeSlider.setValue(ms);
+        double ms = ct.toMillis();     
+        
+        if(isTimeSliderChanging){
+            //String.format("%.2f", Double.toString(timeSlider.getValue()));
+            currentText.setText(String.format("%.1f", timeSlider.getValue()));
+        } else {
+            currentText.setText(String.format("%.1f", ms));
+            timeSlider.setValue(ms);
+        }
         
         currentVisualizer.update(timestamp, duration, magnitudes, phases);
     }
