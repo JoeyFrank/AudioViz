@@ -128,11 +128,9 @@ public class PlayerController implements Initializable {
         
         timeSlider.setOnMouseReleased((MouseEvent event) -> {
             this.isTimeSliderChanging = false;
-            Double value = ((Slider)event.getSource()).getValue();
-            
-            Duration newTime = new Duration(timeSlider.getValue());              
+            Duration newTime = new Duration(timeSlider.getValue());
             mediaPlayer.seek(newTime);
-        });              
+        });
     }
     
     private void selectVisualizer(ActionEvent event) {
@@ -199,7 +197,6 @@ public class PlayerController implements Initializable {
         currentVisualizer.start(numBands, vizPane);
         timeSlider.setMin(0);
         timeSlider.setMax(duration.toMillis());
-
     }
     
     
