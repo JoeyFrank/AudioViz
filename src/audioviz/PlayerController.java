@@ -117,23 +117,22 @@ public class PlayerController implements Initializable {
         }
         
         
-        EventHandler<? super MouseEvent> mousePressed = (MouseEvent event) -> {
+        //ADDED - Listeners on TimeSlider to change time with slider
+        timeSlider.setOnMousePressed((MouseEvent event) -> {
             this.isTimeSliderChanging = true;
-            System.out.println("Mouse pressed");
-        };
+        });
         
-        EventHandler<? super MouseEvent> mouseRelease = (MouseEvent event) -> {
+        timeSlider.setOnMouseDragged((MouseEvent event) -> {
+            currentText.setText(String.format("%.1f", timeSlider.getValue()));
+        });
+        
+        timeSlider.setOnMouseReleased((MouseEvent event) -> {
             this.isTimeSliderChanging = false;
             Double value = ((Slider)event.getSource()).getValue();
-            System.out.println("Mouse Released, Value : " + value);
             
             Duration newTime = new Duration(timeSlider.getValue());              
             mediaPlayer.seek(newTime);
-        };
-
-        timeSlider.setOnMousePressed(mousePressed);
-        timeSlider.setOnMouseReleased(mouseRelease);
-                         
+        });              
     }
     
     private void selectVisualizer(ActionEvent event) {
@@ -214,10 +213,8 @@ public class PlayerController implements Initializable {
         Duration ct = mediaPlayer.getCurrentTime();
         double ms = ct.toMillis();     
         
-        if(isTimeSliderChanging){
-            //String.format("%.2f", Double.toString(timeSlider.getValue()));
-            currentText.setText(String.format("%.1f", timeSlider.getValue()));
-        } else {
+        //ADDED - Stops updating with song while TimeSlider is dragged to allow time change
+        if(!isTimeSliderChanging){
             currentText.setText(String.format("%.1f", ms));
             timeSlider.setValue(ms);
         }

@@ -10,6 +10,9 @@
             <file>file:/Users/dalemusser/Desktop/AudioViz/src/audioviz/EllipseVisualizer3.java</file>
             <file>file:/Users/dalemusser/Desktop/AudioViz/src/audioviz/Visualizer.java</file>
         </group>
-        <group/>
+        <group>
+            <file>file:/Users/Joey/Education/S6-College/Object-Oriented-Design/AudioViz/src/audioviz/AudioViz.java</file>
+            <file>file:/Users/Joey/Education/S6-College/Object-Oriented-Design/AudioViz/src/audioviz/PlayerController.java</file>
+        </group>
     </open-files>
 </project-private>
